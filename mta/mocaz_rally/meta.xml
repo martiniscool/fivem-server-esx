@@ -1,8 +1,10 @@
 <meta>
-    <info author="Mocaz" name="Mocaz Rally" version="0.1.0" type="script" description="Standalone rally game prototype for MTA:SA" />
+    <info author="Mocaz" name="Mocaz Rally" version="0.2.0" type="script" description="Standalone rally game for MTA:SA" />
     <script src="shared/config.lua" type="shared" />
     <script src="server/main.lua" type="server" />
+    <script src="server/rally.lua" type="server" />
     <script src="client/main.lua" type="client" />
+    <script src="client/rally.lua" type="client" />
     <file src="ui/index.html" />
     <file src="ui/style.css" />
     <file src="ui/app.js" />
