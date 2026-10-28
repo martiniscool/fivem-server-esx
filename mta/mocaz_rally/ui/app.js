@@ -12,7 +12,7 @@
   setVersion(v){$("version").textContent="BUILD "+v;},
   showCreateProfile(){show("create");},
   showDriverSelection(data){if(data)profile=Object.assign(profile||{},data);show("driver");},
-  showMain(data){if(data)profile=Object.assign(profile||{},data);if(!profile||!profile.nickname){show("create");return;}$("welcomeName").textContent=profile.nickname+"."; $("profileName").textContent=profile.nickname;$("profileMeta").textContent="ROK "+(profile.birthYear||"—")+" · "+String(profile.driverStyle||"rookie").toUpperCase();show("main");$("raceOverlay").classList.add("hidden");},
+  showMain(data){document.body.classList.remove("racing");if(data)profile=Object.assign(profile||{},data);if(!profile||!profile.nickname){show("create");return;}$("welcomeName").textContent=profile.nickname+"."; $("profileName").textContent=profile.nickname;$("profileMeta").textContent="ROK "+(profile.birthYear||"—")+" · "+String(profile.driverStyle||"rookie").toUpperCase();show("main");$("raceOverlay").classList.add("hidden");},
   showNotice(message){const n=$("notice");n.textContent=String(message||"Něco se nepovedlo.");n.classList.remove("hidden");clearTimeout(window.noticeTimer);window.noticeTimer=setTimeout(()=>n.classList.add("hidden"),5000);},
   showSection(action){emit("mocazRally:uiMenuAction",action);},
   showGameData(page,data){lastGameData=data||{};if(page==="solo"){setGame("Vyber si etapu.","Zvol trasu a auto pro časovku.","solo",stages(data,"solo")+'<div class="lobby-box"><label for="soloVehicle">ZÁVODNÍ AUTO</label><select id="soloVehicle">'+(data.vehicles||[]).map(v=>'<option value="'+esc(v.id)+'">'+esc(v.label+' · '+v.drive+' · '+v.power+' PS')+'</option>').join("")+'</select></div>');}
@@ -25,9 +25,9 @@
    }else{body='<div class="lobby-box"><h3>ŽÁDNÁ OTEVŘENÁ LOBBY</h3><p class="lead">Můžeš vytvořit novou místnost, nebo se vrátit později.</p><div class="inline-controls"><button data-action="joinLobby">PŘIPOJIT SE K DOSTUPNÉ LOBBY</button></div></div>'+stagesHtml+carsHtml;}
    setGame("Multiplayer","Vytvoř lobby nebo se připoj k otevřenému závodu.","multiplayer",body);
   },
-  showRaceMode(){screens.forEach(s=>$(s).classList.add("hidden"));$("raceOverlay").classList.remove("hidden");},
-  showRaceHUD(message){$("raceOverlay").classList.remove("hidden");$("raceMessage").textContent=String(message||"");},
-  hideRaceHUD(){ $("raceOverlay").classList.add("hidden");show("main");}
+  showRaceMode(){document.body.classList.add("racing");screens.forEach(s=>$(s).classList.add("hidden"));$("raceOverlay").classList.remove("hidden");},
+  showRaceHUD(message){document.body.classList.add("racing");$("raceOverlay").classList.remove("hidden");$("raceMessage").textContent=String(message||"");},
+  hideRaceHUD(){ document.body.classList.remove("racing");$("raceOverlay").classList.add("hidden");show("main");}
  };
  $("profileForm").addEventListener("submit",e=>{e.preventDefault();emit("mocazRally:uiCreateProfile",$("nickname").value.trim(),Number($("birthYear").value));});
  document.querySelectorAll("[data-driver]").forEach(b=>b.addEventListener("click",()=>emit("mocazRally:uiChooseDriver",b.dataset.driver)));
