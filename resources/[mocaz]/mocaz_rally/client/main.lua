@@ -39,3 +39,39 @@ end)
 RegisterNetEvent('mocaz_rally:raceEnded', function(result)
     SendNUIMessage({ action='raceEnded', result=result or {} })
 end)
+
+
+-- Visible start-zone markers make the configured stage start discoverable.
+CreateThread(function()
+    for id, stage in pairs(Config.Stages) do
+        if stage.enabled then
+            local blip = AddBlipForCoord(stage.start.x, stage.start.y, stage.start.z)
+            SetBlipSprite(blip, 315)
+            SetBlipColour(blip, 1)
+            SetBlipScale(blip, 0.8)
+            SetBlipAsShortRange(blip, true)
+            BeginTextCommandSetBlipName('STRING')
+            AddTextComponentString('Mocaz Rally: ' .. stage.label)
+            EndTextCommandSetBlipName(blip)
+        end
+    end
+
+    while true do
+        local waitMs = 900
+        local ped = PlayerPedId()
+        local coords = GetEntityCoords(ped)
+        for _, stage in pairs(Config.Stages) do
+            if stage.enabled then
+                local distance = #(coords - stage.start)
+                if distance < 70.0 then
+                    waitMs = 0
+                    DrawMarker(1, stage.start.x, stage.start.y, stage.start.z - 1.0,
+                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                        5.0, 5.0, 1.0, 227, 39, 61, 120,
+                        false, true, 2, false, nil, nil, false)
+                end
+            end
+        end
+        Wait(waitMs)
+    end
+end)
