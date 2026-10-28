@@ -57,6 +57,8 @@ addEvent("mocazRally:uiLeaveLobby", true)
 addEventHandler("mocazRally:uiLeaveLobby", root, function() triggerServerEvent("mocazRally:leaveLobby", resourceRoot) end)
 addEvent("mocazRally:uiSelectVehicle", true)
 addEventHandler("mocazRally:uiSelectVehicle", root, function(id) triggerServerEvent("mocazRally:selectVehicle", resourceRoot, id) end)
+addEvent("mocazRally:uiSetPreferredVehicle", true)
+addEventHandler("mocazRally:uiSetPreferredVehicle", root, function(id) triggerServerEvent("mocazRally:setPreferredVehicle", resourceRoot, id) end)
 addEvent("mocazRally:uiSchoolLesson", true)
 addEventHandler("mocazRally:uiSchoolLesson", root, function(id) triggerServerEvent("mocazRally:schoolLesson", resourceRoot, id) end)
 
