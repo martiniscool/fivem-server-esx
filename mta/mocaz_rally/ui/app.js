@@ -1,5 +1,5 @@
 (() => {
-  const screens = ["create", "main", "section"];
+  const screens = ["create", "driver", "main", "section"];
   let profile = null;
   const sectionInfo = {
     solo: ["01 / SOLO RALLY", "Časovky začínají.", "Sólo režim bude obsahovat etapy, checkpointy, měření času, osobní rekordy a opakování jízd."],
@@ -16,6 +16,7 @@
   window.MocazRallyUI = {
     setVersion(v) { document.getElementById("version").textContent = "BUILD " + v; },
     showCreateProfile() { show("create"); },
+    showDriverSelection(data) { if (data) profile = Object.assign(profile || {}, data); show("driver"); },
     showMain(data) {
       if (data) profile = Object.assign(profile || {}, data);
       if (profile && profile.nickname) {
@@ -47,6 +48,7 @@
     e.preventDefault();
     emit("mocazRally:uiCreateProfile", document.getElementById("nickname").value.trim(), Number(document.getElementById("birthYear").value));
   });
+  document.querySelectorAll("[data-driver]").forEach(button => button.addEventListener("click", () => emit("mocazRally:uiChooseDriver", button.dataset.driver)));
   document.querySelectorAll("[data-action]").forEach(button => button.addEventListener("click", () => emit("mocazRally:uiMenuAction", button.dataset.action)));
   document.getElementById("backButton").addEventListener("click", () => show("main"));
   document.addEventListener("keydown", e => { if (e.key === "Escape") emit("mocazRally:uiClose"); });
