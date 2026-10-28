@@ -26,8 +26,8 @@
    setGame("Multiplayer","Vytvoř lobby nebo se připoj k otevřenému závodu.","multiplayer",body);
   },
   showRaceMode(){document.body.classList.add("racing");screens.forEach(s=>$(s).classList.add("hidden"));$("raceOverlay").classList.remove("hidden");},
-  showRaceHUD(message){document.body.classList.add("racing");$("raceOverlay").classList.remove("hidden");$("raceMessage").textContent=String(message||"");},
-  hideRaceHUD(){ document.body.classList.remove("racing");$("raceOverlay").classList.add("hidden");show("main");}
+  showRaceHUD(message){document.body.classList.add("racing");$("raceOverlay").classList.remove("hidden");$("raceMessage").textContent=String(message||"");const done=String(message||"").startsWith("CÍL!");$("raceOverlay").style.pointerEvents=done?"auto":"none";$("raceOverlay").querySelector("small").textContent=done?"KLIKNI PRO NÁVRAT DO MENU":"BACKSPACE · UKONČIT JÍZDU";},
+  hideRaceHUD(){ document.body.classList.remove("racing");$("raceOverlay").style.pointerEvents="none";$("raceOverlay").classList.add("hidden");show("main");}
  };
  $("profileForm").addEventListener("submit",e=>{e.preventDefault();emit("mocazRally:uiCreateProfile",$("nickname").value.trim(),Number($("birthYear").value));});
  document.querySelectorAll("[data-driver]").forEach(b=>b.addEventListener("click",()=>emit("mocazRally:uiChooseDriver",b.dataset.driver)));
@@ -42,6 +42,7 @@
   else if(action==="leaveLobby")emit("mocazRally:uiLeaveLobby");
  });
  $("gameContent").addEventListener("change",e=>{if(e.target.id==="lobbyVehicle")emit("mocazRally:uiSelectVehicle",e.target.value);});
+ $("raceOverlay").addEventListener("click",()=>{if($("raceOverlay").style.pointerEvents==="auto")window.MocazRallyUI.hideRaceHUD();});
  $("backButton").addEventListener("click",()=>show("main"));
  $("leaveLobbyButton").addEventListener("click",()=>emit("mocazRally:uiLeaveLobby"));
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("raceOverlay").classList.contains("hidden"))return;if(e.key==="Escape")show("main");});
