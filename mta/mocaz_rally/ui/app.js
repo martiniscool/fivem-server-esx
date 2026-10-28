@@ -26,7 +26,7 @@
    setGame("Multiplayer","Vytvoř lobby nebo se připoj k otevřenému závodu.","multiplayer",body);
   },
   showRaceMode(){document.body.classList.add("racing");screens.forEach(s=>$(s).classList.add("hidden"));$("raceOverlay").classList.remove("hidden");},
-  showRaceHUD(message){document.body.classList.add("racing");$("raceOverlay").classList.remove("hidden");$("raceMessage").textContent=String(message||"");const done=String(message||"").startsWith("CÍL!");$("raceOverlay").style.pointerEvents=done?"auto":"none";$("raceOverlay").querySelector("small").textContent=done?"KLIKNI PRO NÁVRAT DO MENU":"BACKSPACE · UKONČIT JÍZDU";},
+  showRaceHUD(message){document.body.classList.add("racing");$("raceOverlay").classList.remove("hidden");$("raceMessage").textContent=String(message||"");const done=String(message||"").startsWith("CÍL!");if(done)screens.forEach(s=>$(s).classList.add("hidden"));$("raceOverlay").style.pointerEvents=done?"auto":"none";$("raceOverlay").querySelector("small").textContent=done?"KLIKNI PRO NÁVRAT DO MENU":"BACKSPACE · UKONČIT JÍZDU";},
   hideRaceHUD(){ document.body.classList.remove("racing");$("raceOverlay").style.pointerEvents="none";$("raceOverlay").classList.add("hidden");show("main");}
  };
  $("profileForm").addEventListener("submit",e=>{e.preventDefault();emit("mocazRally:uiCreateProfile",$("nickname").value.trim(),Number($("birthYear").value));});
