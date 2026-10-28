@@ -1,25 +1,31 @@
-# Mocaz Rally — MTA:SA prototype 0.1.0
+# Mocaz Rally — MTA:SA prototype 0.2.0
 
-Standalone rally-game resource for Multi Theft Auto: San Andreas. This is a fresh MTA implementation, separate from the earlier FiveM prototype.
+Samostatný závodní resource pro Multi Theft Auto: San Andreas. Je oddělený od původního FiveM prototypu.
 
-## Current foundation
-- Full-screen CEF interface with a dark red/black motorsport theme.
-- First-join profile form (nickname and birth year).
-- Persistent profile storage in SQLite, keyed by MTA player serial.
-- Driver identity selection: Rookie, Technik, Showman.
-- Main menu entries for Solo, Multiplayer, Rally School, Garage and Profile.
-- Hides regular player HUD/chat and freezes/hides the player while the menu is open.
-- Menu destinations are currently UI placeholders; playable rally stages, vehicle assets, tuning, multiplayer lobby and school lessons are not implemented yet.
+## Co aktuálně obsahuje
+- Úvodní CEF rozhraní s vytvořením profilu, přezdívkou a rokem narození.
+- Ukládání profilu do SQLite podle MTA serialu.
+- Výběr závodnické identity: Rookie, Technik a Showman.
+- První sólo časovku: spawn auta, odpočet, checkpointy, kontrolu pořadí, cílový čas a uložení výsledku.
+- Základní multiplayer lobby: vytvoření, připojení, host start a společný odpočet.
+- Garáž se šesti vestavěnými modely GTA:SA.
+- Rally školu s úvodními lekcemi brzdění, ideální stopy a ruční brzdy.
+- Historii výsledků v profilu.
+- Oddělenou dimenzi pro závodění, aby závody neprobíhaly v běžném open worldu.
 
-## Install
-1. Copy the folder named mocaz_rally into the MTA server's resources folder.
-2. In the MTA server console run refresh then start mocaz_rally, or add start mocaz_rally to mtaserver.conf.
-3. Join the server. The resource creates mocaz_rally.db automatically.
+## Instalace na čistý MTA server
+1. Stáhni složku `mta/mocaz_rally` z repozitáře.
+2. Nahraj samotnou složku `mocaz_rally` do složky `resources` svého MTA serveru.
+3. V serverové konzoli spusť `refresh` a potom `start mocaz_rally`.
+4. Alternativně přidej `start mocaz_rally` do `mtaserver.conf`.
+5. Připoj se do hry. Resource si automaticky vytvoří databázi `mocaz_rally.db`.
 
-## Notes
-- The profile currently uses the player's MTA serial as its persistent key. This is a prototype identity system, not a secure account/password system.
-- Birth year is a profile field only; it is not age verification.
-- Menu camera coordinates and the first screen are prototype values and need in-game testing.
-- The UI imports Google Fonts when internet access is available; local fallback fonts are included.
-- No third-party vehicle models or maps are bundled. Only add assets with verified permissions/licences.
-- Not yet tested on a live MTA server.
+## Důležité limity první verze
+- Resource zatím nebyl otestován na živém MTA serveru. Nejdřív jej spusť na testovacím serveru a zkontroluj serverovou i klientskou debug konzoli.
+- Je nakonfigurovaná jedna prototypová etapa LS Airport Sprint. Souřadnice, výška checkpointů a průjezdnost trasy se musí ověřit ve hře a případně upravit.
+- Vozidla jsou zatím pouze vestavěné modely GTA:SA; žádné externí modely ani mapy nejsou přibalené.
+- Multiplayer má jednu otevřenou lobby a je to základní implementace, nikoli produkční matchmaking.
+- Rally škola zatím poskytuje instrukce, ne plnohodnotné praktické zkoušky.
+- Hodnoty výkonu aut jsou zatím informativní a nemění fyziku vozidel.
+- Profil je navázaný na MTA serial, nejde o účet chráněný heslem. Rok narození není ověřením věku.
+- Anti-cheat, administrace, moderace a produkční zálohování databáze nejsou součástí prototypu.
