@@ -144,6 +144,10 @@ addEventHandler("mocazRally:requestGameData",resourceRoot,function(page)
  if page=="solo" or page=="school" then menu(p,page,{stages=MocazRally.Stages,vehicles=MocazRally.Vehicles})
  elseif page=="garage" then menu(p,page,{vehicles=MocazRally.Vehicles,selected=getElementData(p,"mocazRally:vehicle") or "sultan",tuning=MocazRally.Tuning,currentTune=loadTune(p)})
  elseif page=="multiplayer" then local d=lobbyData(); d.vehicles=MocazRally.Vehicles; d.stages=MocazRally.Stages; d.isHost=lobby and lobby.host==p or false; d.isMember=lobby and lobby.members[p] or false; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d)
+ elseif page=="leaderboard" then
+  local results={}
+  if db then local q=dbQuery(db,"SELECT nickname,stage_id,MIN(time_ms) AS time_ms FROM race_results GROUP BY serial,stage_id ORDER BY time_ms ASC LIMIT 20"); results=dbPoll(q,-1) or {} end
+  menu(p,"leaderboard",{results=results})
  elseif page=="profile" then
   local results={}
   if db then local q=dbQuery(db,"SELECT stage_id,time_ms,mode,created_at FROM race_results WHERE serial=? ORDER BY time_ms ASC LIMIT 10",getPlayerSerial(p)); results=dbPoll(q,-1) or {} end
