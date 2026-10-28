@@ -1,9 +1,10 @@
 MocazRally = MocazRally or {}
-MocazRally.Version = "0.4.0"
+MocazRally.Version = "0.5.0"
 MocazRally.Brand = "MOCAZ RALLY"
 MocazRally.MenuCamera = { x = 1959.55, y = -1714.46, z = 24.0, lx = 1959.55, ly = -1714.46, lz = 18.0 }
 MocazRally.MinBirthYear, MocazRally.MaxBirthYear, MocazRally.MaxNicknameLength = 1900, 2027, 24
 MocazRally.RaceDimension, MocazRally.LobbyMaxPlayers, MocazRally.CheckpointRadius, MocazRally.StartCountdown = 40, 8, 18, 5
+MocazRally.Theme = { primary = "#e53935", background = "#101114", surface = "#1a1c21", accent = "#f4f4f5" }
 MocazRally.DriverStyles = {
  {id="rookie",label="ROOKIE",description="Začínám od nuly."},
  {id="technician",label="TECHNIK",description="Přesnost a nastavení."},
@@ -24,7 +25,13 @@ MocazRally.Vehicles = {
  {id="comet",label="Comet",model=480,drive="RWD",class="SPORT",power=265,price=22000},
  {id="flash_gt",label="Flash GT",model=402,drive="RWD",class="STREET",power=235,price=14000},
  {id="zr350",label="ZR-350",model=477,drive="RWD",class="SPORT",power=290,price=24000},
- {id="sabre",label="Sabre",model=475,drive="RWD",class="CLASSIC",power=215,price=10000}
+ {id="sabre",label="Sabre",model=475,drive="RWD",class="CLASSIC",power=215,price=10000},
+ {id="buffalo",label="Buffalo",model=402,drive="RWD",class="STREET",power=250,price=17000},
+ {id="landstalker",label="Landstalker Rally",model=400,drive="AWD",class="RALLY SUV",power=220,price=15000},
+ {id="mesa",label="Mesa Rally Raid",model=500,drive="AWD",class="RALLY RAID",power=205,price=13000},
+ {id="banshee",label="Banshee",model=429,drive="RWD",class="SPORT",power=310,price=32000},
+ {id="phoenix",label="Phoenix",model=603,drive="RWD",class="STREET",power=270,price=21000},
+ {id="hotknife",label="Hotknife",model=434,drive="RWD",class="CLASSIC",power=230,price=18000}
 }
 
 MocazRally.Tuning = {
@@ -68,5 +75,20 @@ MocazRally.Stages = {
   start={x=-500.0,y=2200.0,z=42.0,rot=90},
   checkpoints={{x=-300.0,y=2280.0,z=40.0},{x=-80.0,y=2350.0,z=35.0},{x=150.0,y=2420.0,z=30.0},{x=380.0,y=2380.0,z=28.0},{x=600.0,y=2250.0,z=30.0}},
   finish={x=780.0,y=2100.0,z=35.0}
+ }
+ ,
+ {
+  id="mountain_technical", name="Mount Chiliad Technical", location="Mount Chiliad · horská etapa", difficulty="PRO",
+  description="Technická horská etapa s prudkými změnami směru a úzkými průjezdy.",
+  start={x=-2310.0,y=-1650.0,z=483.0,rot=0},
+  checkpoints={{x=-2260.0,y=-1580.0,z=470.0},{x=-2200.0,y=-1510.0,z=450.0},{x=-2140.0,y=-1430.0,z=425.0},{x=-2070.0,y=-1350.0,z=400.0},{x=-2010.0,y=-1280.0,z=375.0}},
+  finish={x=-1950.0,y=-1210.0,z=350.0}
+ },
+ {
+  id="las_venturas_sprint", name="Las Venturas Night Sprint", location="Las Venturas · město", difficulty="CLUB",
+  description="Rychlá městská etapa pro přesné brzdění a stabilní průjezdy zatáček.",
+  start={x=1460.0,y=750.0,z=11.0,rot=90},
+  checkpoints={{x=1550.0,y=820.0,z=11.0},{x=1660.0,y=920.0,z=11.0},{x=1780.0,y=1050.0,z=11.0},{x=1900.0,y=1150.0,z=11.0},{x=2020.0,y=1250.0,z=11.0}},
+  finish={x=2130.0,y=1350.0,z=11.0}
  }
 }
