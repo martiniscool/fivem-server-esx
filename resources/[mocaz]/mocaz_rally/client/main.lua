@@ -1,19 +1,41 @@
 local ESX = exports['es_extended']:getSharedObject()
 local uiOpen = false
-RegisterNetEvent('mocaz_rally:notify', function(msg) if ESX and ESX.ShowNotification then ESX.ShowNotification(msg) end end)
+
+RegisterNetEvent('mocaz_rally:notify', function(msg)
+    if ESX and ESX.ShowNotification then ESX.ShowNotification(msg) end
+end)
+
 RegisterCommand(Config.Command, function()
- if uiOpen then return end
- ESX.TriggerServerCallback('mocaz_rally:getMenuData', function(data)
-  uiOpen = true; SetNuiFocus(true, true); SendNUIMessage({action='open', stages=data.stages or {}})
- end)
+    if uiOpen then return end
+    ESX.TriggerServerCallback('mocaz_rally:getMenuData', function(data)
+        uiOpen = true
+        SetNuiFocus(true, true)
+        SendNUIMessage({ action='open', stages=data.stages or {}, leaderboard=data.leaderboard or {} })
+    end)
 end, false)
-RegisterNUICallback('close', function(_, cb) uiOpen=false; SetNuiFocus(false,false); cb({ok=true}) end)
+
+RegisterNUICallback('close', function(_, cb)
+    uiOpen = false
+    SetNuiFocus(false, false)
+    cb({ ok=true })
+end)
+
 RegisterNUICallback('startRace', function(data, cb)
- TriggerServerEvent('mocaz_rally:requestStart', tostring(data.stageId or ''))
- uiOpen=false; SetNuiFocus(false,false); cb({ok=true})
+    TriggerServerEvent('mocaz_rally:requestStart', tostring(data.stageId or ''))
+    uiOpen = false
+    SetNuiFocus(false, false)
+    cb({ ok=true })
 end)
+
+RegisterNetEvent('mocaz_rally:countdown', function(seconds)
+    SendNUIMessage({ action='countdown', seconds=seconds or 5 })
+end)
+
 RegisterNetEvent('mocaz_rally:raceStarted', function(payload)
- SendNUIMessage({action='raceStarted',stage=payload.stageLabel})
- TriggerEvent('mocaz_rally:notify', ('Mocaz Rally: %s – START!'):format(payload.stageLabel or 'Etapa'))
+    SendNUIMessage({ action='raceStarted', stage=payload.stageLabel })
+    TriggerEvent('mocaz_rally:notify', ('Mocaz Rally: %s – START!'):format(payload.stageLabel or 'Etapa'))
 end)
-RegisterNetEvent('mocaz_rally:raceEnded', function(result) SendNUIMessage({action='raceEnded',result=result or {}}) end)
+
+RegisterNetEvent('mocaz_rally:raceEnded', function(result)
+    SendNUIMessage({ action='raceEnded', result=result or {} })
+end)
