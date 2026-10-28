@@ -64,15 +64,17 @@ addEventHandler("mocazRally:uiSchoolLesson", root, function(id) triggerServerEve
 
 addEvent("mocazRally:profileLoaded", true)
 addEventHandler("mocazRally:profileLoaded", resourceRoot, function(profile)
+    outputDebugString("[Mocaz Rally] Klient přijal profileLoaded: " .. tostring(profile and profile.nickname) .. ", isNew=" .. tostring(profile and profile.isNew))
     profileReady = true
     if profile and profile.isNew then callUI("showDriverSelection", profile) else callUI("showMain", profile) end
 end)
 addEvent("mocazRally:profileMissing", true)
-addEventHandler("mocazRally:profileMissing", resourceRoot, function() callUI("showCreateProfile") end)
+addEventHandler("mocazRally:profileMissing", resourceRoot, function() outputDebugString("[Mocaz Rally] Server poslal profileMissing."); callUI("showCreateProfile") end)
 addEvent("mocazRally:notice", true)
 addEventHandler("mocazRally:notice", resourceRoot, function(message) callUI("showNotice", message) end)
 addEvent("mocazRally:driverChosen", true)
 addEventHandler("mocazRally:driverChosen", resourceRoot, function(profile)
+    outputDebugString("[Mocaz Rally] Klient přijal driverChosen: " .. tostring(profile and profile.nickname))
     profileReady = true
     callUI("showMain", profile)
 end)
