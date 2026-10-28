@@ -41,7 +41,7 @@
   else if(action==="startLobby")emit("mocazRally:uiStartLobby");
   else if(action==="leaveLobby")emit("mocazRally:uiLeaveLobby");
  });
- $("gameContent").addEventListener("change",e=>{if(e.target.id==="lobbyVehicle")emit("mocazRally:uiSelectVehicle",e.target.value);});
+ $("gameContent").addEventListener("change",e=>{if(e.target.id==="lobbyVehicle")emit("mocazRally:uiSetPreferredVehicle",e.target.value);});
  $("raceOverlay").addEventListener("click",()=>{if($("raceOverlay").style.pointerEvents==="auto")window.MocazRallyUI.hideRaceHUD();});
  $("backButton").addEventListener("click",()=>show("main"));
  $("leaveLobbyButton").addEventListener("click",()=>emit("mocazRally:uiLeaveLobby"));
