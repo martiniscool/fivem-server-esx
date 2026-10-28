@@ -41,7 +41,7 @@
   else if(action==="startLobby")emit("mocazRally:uiStartLobby");
   else if(action==="leaveLobby")emit("mocazRally:uiLeaveLobby");
  });
- $("gameContent").addEventListener("change",e=>{if(e.target.id==="soloVehicle"){}});
+ $("gameContent").addEventListener("change",e=>{if(e.target.id==="lobbyVehicle")emit("mocazRally:uiSelectVehicle",e.target.value);});
  $("backButton").addEventListener("click",()=>show("main"));
  $("leaveLobbyButton").addEventListener("click",()=>emit("mocazRally:uiLeaveLobby"));
  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("raceOverlay").classList.contains("hidden"))return;if(e.key==="Escape")show("main");});
