@@ -1,8 +1,8 @@
 MocazRally = MocazRally or {}
-MocazRally.Version = "0.2.0"
+MocazRally.Version = "0.3.0"
 MocazRally.Brand = "MOCAZ RALLY"
 MocazRally.MenuCamera = { x = 1959.55, y = -1714.46, z = 24.0, lx = 1959.55, ly = -1714.46, lz = 18.0 }
-MocazRally.MinBirthYear, MocazRally.MaxBirthYear, MocazRally.MaxNicknameLength = 1900, 2026, 24
+MocazRally.MinBirthYear, MocazRally.MaxBirthYear, MocazRally.MaxNicknameLength = 1900, 2027, 24
 MocazRally.RaceDimension, MocazRally.LobbyMaxPlayers, MocazRally.CheckpointRadius, MocazRally.StartCountdown = 40, 8, 18, 5
 MocazRally.DriverStyles = {
  {id="rookie",label="ROOKIE",description="Začínám od nuly."},
