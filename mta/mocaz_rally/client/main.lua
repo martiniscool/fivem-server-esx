@@ -78,9 +78,9 @@ addEventHandler("mocazRally:gameData", resourceRoot, function(page, data) callUI
 addEvent("mocazRally:lobbyUpdate", true)
 addEventHandler("mocazRally:lobbyUpdate", resourceRoot, function(data) callUI("showLobby", data) end)
 addEvent("mocazRally:racePrepared", true)
-addEventHandler("mocazRally:racePrepared", resourceRoot, function() showCursor(false); showChat(true); showPlayerHudComponent("all", true); callUI("showRaceMode") end)
+addEventHandler("mocazRally:racePrepared", resourceRoot, function() setCameraTarget(localPlayer); showCursor(false); showChat(true); showPlayerHudComponent("all", true); callUI("showRaceMode") end)
 addEvent("mocazRally:raceReturn", true)
-addEventHandler("mocazRally:raceReturn", resourceRoot, function() showCursor(true); callUI("showMain") end)
+addEventHandler("mocazRally:raceReturn", resourceRoot, function() setCameraMatrix(MocazRally.MenuCamera.x, MocazRally.MenuCamera.y, MocazRally.MenuCamera.z, MocazRally.MenuCamera.lx, MocazRally.MenuCamera.ly, MocazRally.MenuCamera.lz); showCursor(true); callUI("showMain") end)
 
 addEventHandler("onClientResourceStart", resourceRoot, function()
     hideWorld()
