@@ -72,9 +72,9 @@ addEventHandler("mocazRally:profileMissing", resourceRoot, function() callUI("sh
 addEvent("mocazRally:notice", true)
 addEventHandler("mocazRally:notice", resourceRoot, function(message) callUI("showNotice", message) end)
 addEvent("mocazRally:driverChosen", true)
-addEventHandler("mocazRally:driverChosen", resourceRoot, function(style)
+addEventHandler("mocazRally:driverChosen", resourceRoot, function(profile)
     profileReady = true
-    triggerServerEvent("mocazRally:requestProfile", resourceRoot)
+    callUI("showMain", profile)
 end)
 addEvent("mocazRally:menuOpened", true)
 addEventHandler("mocazRally:menuOpened", resourceRoot, function(action) callUI("showSection", action) end)
