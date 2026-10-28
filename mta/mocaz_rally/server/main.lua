@@ -23,6 +23,9 @@ end
 
 local function sendProfile(player, profile)
     profiles[player] = profile
+    setElementData(player, "mocazRally:nickname", profile.nickname, false)
+    setElementData(player, "mocazRally:birthYear", profile.birthYear, false)
+    setElementData(player, "mocazRally:driverStyle", profile.driverStyle or "rookie", false)
     triggerClientEvent(player, "mocazRally:profileLoaded", resourceRoot, profile)
 end
 
