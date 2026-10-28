@@ -36,3 +36,24 @@ Nová verze vypisuje hlášky s prefixem `[Mocaz Rally]`. Po kliknutí na styl s
 - Výkony uvedené u aut jsou informativní a zatím nemění fyziku.
 - Profil není chráněný účtem a heslem; identita je navázaná na MTA serial.
 - Anti-cheat, administrace, zálohování databáze a produkční ochrana proti cheatům zatím nejsou implementované.
+
+
+## Build 0.4.0 — rozšířený závodní základ
+
+Tato verze přidává:
+- pět konfigurovaných etap: LS Airport Sprint, Airport Grand Loop, Red County Run, Flint Hills Gravel a Bone County Desert;
+- rozšířený výběr 12 vozidel založených na dostupných modelech GTA: San Andreas;
+- persistentní rally setupy Stage 1, Stage 2 a Rally Setup, ukládané do SQLite a aplikované při vytvoření závodního auta;
+- žebříček nejlepších uložených časů podle etap;
+- aktualizované menu a verzi resource 0.4.0.
+
+### Instalace aktualizace
+Nahraď celý adresář `mocaz_rally` verzí z repozitáře a potom v konzoli MTA spusť:
+```
+refresh
+restart mocaz_rally
+```
+Neodstraňuj soubor `mocaz_rally.db`, obsahuje profily a výsledky.
+
+### Důležitá omezení
+Etapy používají konfigurované souřadnice a je nutné je fyzicky projet a ověřit na konkrétní mapě MTA:SA. Vozidla jsou aktuálně modely GTA:SA s herními názvy; skutečné značky, nové karoserie, interiéry, zvuky a kvalitní modpack vyžadují samostatné kompatibilní DFF/TXD/handling soubory a testování. Rally setupy v tomto prototypu nemají napojenou ekonomiku a jsou odemčené pro testování. Tato verze nebyla na tvém hostingu spuštěna ani otestována.
