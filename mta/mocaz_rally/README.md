@@ -1,4 +1,4 @@
-# Mocaz Rally — MTA:SA resource 0.3.0
+# Mocaz Rally — MTA:SA resource 0.5.0
 
 Samostatný závodní režim pro Multi Theft Auto: San Andreas. Nejde o FiveM resource.
 
@@ -57,3 +57,12 @@ Neodstraňuj soubor `mocaz_rally.db`, obsahuje profily a výsledky.
 
 ### Důležitá omezení
 Etapy používají konfigurované souřadnice a je nutné je fyzicky projet a ověřit na konkrétní mapě MTA:SA. Vozidla jsou aktuálně modely GTA:SA s herními názvy; skutečné značky, nové karoserie, interiéry, zvuky a kvalitní modpack vyžadují samostatné kompatibilní DFF/TXD/handling soubory a testování. Rally setupy v tomto prototypu nemají napojenou ekonomiku a jsou odemčené pro testování. Tato verze nebyla na tvém hostingu spuštěna ani otestována.
+
+
+## Build 0.5.0 — rozšíření rally nabídky
+
+- Přidáno šest dalších výběrů vozidel využívajících vestavěné modely GTA:SA (Buffalo, Landstalker Rally, Mesa Rally Raid, Banshee, Phoenix a Hotknife).
+- Přidány dvě konfigurované etapy: Mount Chiliad Technical a Las Venturas Night Sprint.
+- Přidána centrální paleta pro červeno-černý závodní vzhled UI.
+
+**Pozor:** jde o rozšíření konfiguračního základu, nikoli o hotový externí modpack. Vozidla stále používají původní modely GTA:SA a nové etapy mají neověřené souřadnice. Před veřejným spuštěním je nutné tratě projet ve hře a dodat samostatné legálně použitelné modely aut/mapové assety. Na FakaHedě tato verze zatím není nasazena ani otestována.
