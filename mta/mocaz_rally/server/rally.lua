@@ -1,7 +1,22 @@
 local db = dbConnect("sqlite", "mocaz_rally.db")
-local active, schoolProgress = {}, {}
+local active, schoolProgress, playerTunes = {}, {}, {}
 local lobby, nextLobbyId = nil, 1
-if db then dbExec(db, [[CREATE TABLE IF NOT EXISTS race_results (id INTEGER PRIMARY KEY AUTOINCREMENT, serial TEXT NOT NULL, nickname TEXT NOT NULL, stage_id TEXT NOT NULL, time_ms INTEGER NOT NULL, mode TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)]]) end
+if db then
+ dbExec(db, [[CREATE TABLE IF NOT EXISTS race_results (id INTEGER PRIMARY KEY AUTOINCREMENT, serial TEXT NOT NULL, nickname TEXT NOT NULL, stage_id TEXT NOT NULL, time_ms INTEGER NOT NULL, mode TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)]])
+ dbExec(db, "CREATE TABLE IF NOT EXISTS vehicle_tuning (serial TEXT PRIMARY KEY, tune_id TEXT NOT NULL DEFAULT 'stock')")
+end
+local function tuneById(id) if id=="stock" or not id then return nil end; for _,t in ipairs(MocazRally.Tuning or {}) do if t.id==id then return t end end end
+local function loadTune(p)
+ if playerTunes[p] then return playerTunes[p] end
+ if db then local q=dbPoll(dbQuery(db,"SELECT tune_id FROM vehicle_tuning WHERE serial=?",getPlayerSerial(p)),-1); if q and q[1] then playerTunes[p]=q[1].tune_id; return playerTunes[p] end end
+ playerTunes[p]="stock"; return "stock"
+end
+local function applyTune(vehicle,tuneId)
+ local tune=tuneById(tuneId); if not tune or not isElement(vehicle) then return end
+ local handling=getVehicleHandling(vehicle); if not handling then return end
+ setVehicleHandling(vehicle,"engineAcceleration",handling.engineAcceleration*(tune.acceleration or 1))
+ setVehicleHandling(vehicle,"maxVelocity",handling.maxVelocity*(tune.maxVelocity or 1))
+end
 
 local function stageById(id) for _,v in ipairs(MocazRally.Stages) do if v.id==id then return v end end end
 local function vehicleById(id) for _,v in ipairs(MocazRally.Vehicles) do if v.id==id then return v end end end
@@ -22,6 +37,7 @@ local function spawnRace(p,stage,vehicleId,mode,lobbyId)
  if not car then notice(p,"Nepodařilo se vytvořit auto."); return false end
  setElementDimension(p,MocazRally.RaceDimension); setElementDimension(car,MocazRally.RaceDimension)
  setElementInterior(p,0); setElementInterior(car,0); setVehicleColor(car,240,68,62,25,25,28)
+ applyTune(car,loadTune(p))
  warpPedIntoVehicle(p,car); setElementFrozen(car,true); setElementFrozen(p,true); setElementAlpha(p,255)
  active[p]={stage=stage,vehicle=car,vehicleId=v.id,mode=mode,lobbyId=lobbyId,checkpoint=1,countdown=true}
  triggerClientEvent(p,"mocazRally:racePrepared",resourceRoot,{stageId=stage.id,stageName=stage.name,checkpoints=stage.checkpoints,finish=stage.finish,vehicle=v.label,mode=mode})
@@ -126,7 +142,7 @@ addEvent("mocazRally:requestGameData",true)
 addEventHandler("mocazRally:requestGameData",resourceRoot,function(page)
  local p=client; if not isElement(p) then return end
  if page=="solo" or page=="school" then menu(p,page,{stages=MocazRally.Stages,vehicles=MocazRally.Vehicles})
- elseif page=="garage" then menu(p,page,{vehicles=MocazRally.Vehicles,selected=getElementData(p,"mocazRally:vehicle") or "sultan"})
+ elseif page=="garage" then menu(p,page,{vehicles=MocazRally.Vehicles,selected=getElementData(p,"mocazRally:vehicle") or "sultan",tuning=MocazRally.Tuning,currentTune=loadTune(p)})
  elseif page=="multiplayer" then local d=lobbyData(); d.vehicles=MocazRally.Vehicles; d.stages=MocazRally.Stages; d.isHost=lobby and lobby.host==p or false; d.isMember=lobby and lobby.members[p] or false; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d)
  elseif page=="profile" then
   local results={}
@@ -140,6 +156,19 @@ addEventHandler("mocazRally:setPreferredVehicle",resourceRoot,function(id)
  setElementData(p,"mocazRally:vehicle",id,false)
  if lobby and lobby.members[p] then lobby.vehicles[p]=id; broadcastLobby() end
 end)
+
+addEvent("mocazRally:buyTune",true)
+addEventHandler("mocazRally:buyTune",resourceRoot,function(tuneId)
+ local p=client; if not isElement(p) then return end
+ local tune=tuneById(tuneId); if not tune then notice(p,"Neplatný tuningový balíček."); return end
+ local serial=getPlayerSerial(p); local current=loadTune(p)
+ if current==tuneId then notice(p,"Tento setup už máš aktivní."); return end
+ local ok=db and dbExec(db,"INSERT OR REPLACE INTO vehicle_tuning (serial,tune_id) VALUES (?,?)",serial,tuneId)
+ if not ok then notice(p,"Tuning se nepodařilo uložit do databáze."); return end
+ playerTunes[p]=tuneId; notice(p,"Aktivní setup: "..tune.label..". Použije se při další jízdě.")
+ menu(p,"garage",{vehicles=MocazRally.Vehicles,selected=getElementData(p,"mocazRally:vehicle") or "sultan",tuning=MocazRally.Tuning,currentTune=tuneId})
+end)
+
 addEvent("mocazRally:selectVehicle",true)
 addEventHandler("mocazRally:selectVehicle",resourceRoot,function(id)
  local p=client; local v=vehicleById(id); if not isElement(p) or not v then return end
@@ -152,7 +181,7 @@ addEventHandler("mocazRally:schoolLesson",resourceRoot,function(lesson)
  if texts[lesson] then notice(p,texts[lesson]); schoolProgress[p]=schoolProgress[p] or {}; schoolProgress[p][lesson]=true; triggerClientEvent(p,"mocazRally:schoolProgress",resourceRoot,schoolProgress[p]) end
 end)
 addEventHandler("onPlayerQuit",root,function()
- if active[source] then clearRace(source,false) end; schoolProgress[source]=nil
+ if active[source] then clearRace(source,false) end; schoolProgress[source]=nil; playerTunes[source]=nil
  if lobby and lobby.members[source] then lobby.members[source]=nil; lobby.vehicles[source]=nil
   if lobby.host==source then lobby.host=nil; for p in pairs(lobby.members) do if isElement(p) then lobby.host=p; break end end end
   if not lobby.host then lobby=nil else broadcastLobby() end
