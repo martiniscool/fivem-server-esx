@@ -116,8 +116,8 @@ addEventHandler("mocazRally:finish",resourceRoot,function()
  local elapsed=getTickCount()-(r.startedAt or getTickCount())
  if elapsed<10000 then notice(p,"Čas jízdy nebyl platný."); clearRace(p,true); return end
  if db then dbExec(db,"INSERT INTO race_results (serial,nickname,stage_id,time_ms,mode) VALUES (?,?,?,?,?)",getPlayerSerial(p),getElementData(p,"mocazRally:nickname") or getPlayerName(p),r.stage.id,elapsed,r.mode) end
- triggerClientEvent(p,"mocazRally:raceResult",resourceRoot,{stageName=r.stage.name,timeMs=elapsed,mode=r.mode})
  clearRace(p,true)
+ triggerClientEvent(p,"mocazRally:raceResult",resourceRoot,{stageName=r.stage.name,timeMs=elapsed,mode=r.mode})
 end)
 addEvent("mocazRally:cancelRace",true)
 addEventHandler("mocazRally:cancelRace",resourceRoot,function() if active[client] then clearRace(client,true) end end)
