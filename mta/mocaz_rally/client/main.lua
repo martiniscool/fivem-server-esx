@@ -2,6 +2,8 @@ local screenW, screenH = guiGetScreenSize()
 local browserGUI, browser
 local profileReady = false
 local currentProfile = nil
+local browserDocumentReady = false
+local lastProfileRequestTick = 0
 
 local function hideWorld()
     fadeCamera(true, 0.5)
@@ -30,6 +32,9 @@ MocazRallyCallUI = callUI
 
 addEvent("mocazRally:uiRequestProfile", true)
 addEventHandler("mocazRally:uiRequestProfile", root, function()
+    local now = getTickCount()
+    if now - lastProfileRequestTick < 5000 then return end
+    lastProfileRequestTick = now
     triggerServerEvent("mocazRally:requestProfile", resourceRoot)
 end)
 
@@ -108,8 +113,10 @@ addEventHandler("onClientResourceStart", resourceRoot, function()
 end)
 
 addEventHandler("onClientBrowserDocumentReady", root, function()
-    if source ~= browser then return end
+    if source ~= browser or browserDocumentReady then return end
+    browserDocumentReady = true
     callUI("setVersion", MocazRally.Version)
+    lastProfileRequestTick = getTickCount()
     triggerServerEvent("mocazRally:requestProfile", resourceRoot)
 end)
 
