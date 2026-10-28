@@ -19,6 +19,11 @@ AddEventHandler('mocaz_rally:beginRace', function(src, stageId)
     end
     local stage = Config.Stages[stageId]
     if not stage or not stage.enabled then return end
+    local ped = GetPlayerPed(src)
+    if not ped or ped == 0 or GetVehiclePedIsIn(ped, false) == 0 then
+        notify(src, 'Do časovky musíš nastoupit do auta.')
+        return
+    end
     if not playerNear(src, stage.start, 35.0) then
         notify(src, 'Pro start závodu musíš být u startovní zóny.')
         return
@@ -51,6 +56,11 @@ RegisterNetEvent('mocaz_rally:checkpoint', function(id, idx)
     if not r or type(idx) ~= 'number' or idx % 1 ~= 0 then return end
     local stage = Config.Stages[r.stageId]
     if not stage or idx ~= r.lastCheckpoint + 1 or idx > #stage.checkpoints then return end
+    local ped = GetPlayerPed(src)
+    if not ped or ped == 0 or GetVehiclePedIsIn(ped, false) == 0 then
+        notify(src, 'Checkpoint se počítá pouze v závodním vozidle.')
+        return
+    end
     if not playerNear(src, stage.checkpoints[idx], Config.CheckpointRadius + 8.0) then
         notify(src, 'Checkpoint nebyl serverem potvrzen.')
         return
@@ -66,6 +76,11 @@ RegisterNetEvent('mocaz_rally:finish', function(id)
     local stage = Config.Stages[r.stageId]
     if not stage or r.lastCheckpoint ~= #stage.checkpoints then
         notify(src, 'Etapa není dokončena: chybí checkpointy.')
+        return
+    end
+    local ped = GetPlayerPed(src)
+    if not ped or ped == 0 or GetVehiclePedIsIn(ped, false) == 0 then
+        notify(src, 'Cíl lze potvrdit pouze v závodním vozidle.')
         return
     end
     if not playerNear(src, stage.finish, Config.FinishRadius + 8.0) then
