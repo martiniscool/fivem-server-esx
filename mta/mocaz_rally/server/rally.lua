@@ -37,7 +37,7 @@ local function startRace(players,stage,mode,lobbyId,vehicles)
  end
  if #ready==0 then return end
  for n=MocazRally.StartCountdown,1,-1 do
-  setTimer(function() for _,p in ipairs(ready) do if isElement(p) and active[p] then triggerClientEvent(p,"mocazRally:countdown",resourceRoot,n) end end end,(MocazRally.StartCountdown-n)*1000,1)
+  setTimer(function(second) for _,p in ipairs(ready) do if isElement(p) and active[p] then triggerClientEvent(p,"mocazRally:countdown",resourceRoot,second) end end end,(MocazRally.StartCountdown-n)*1000,1,n)
  end
  setTimer(function()
   local startTick=getTickCount()
@@ -61,7 +61,7 @@ local function lobbyData()
 end
 local function broadcastLobby()
  if not lobby then return end
- for p in pairs(lobby.members) do if isElement(p) then local d=lobbyData(); d.isHost=p==lobby.host; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d) end end
+ for p in pairs(lobby.members) do if isElement(p) then local d=lobbyData(); d.isHost=p==lobby.host; d.isMember=true; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d) end end
 end
 addEvent("mocazRally:createLobby",true)
 addEventHandler("mocazRally:createLobby",resourceRoot,function(stageId,vehicleId)
@@ -127,7 +127,7 @@ addEventHandler("mocazRally:requestGameData",resourceRoot,function(page)
  local p=client; if not isElement(p) then return end
  if page=="solo" or page=="school" then menu(p,page,{stages=MocazRally.Stages,vehicles=MocazRally.Vehicles})
  elseif page=="garage" then menu(p,page,{vehicles=MocazRally.Vehicles,selected=getElementData(p,"mocazRally:vehicle") or "sultan"})
- elseif page=="multiplayer" then local d=lobbyData(); d.vehicles=MocazRally.Vehicles; d.stages=MocazRally.Stages; d.isHost=lobby and lobby.host==p or false; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d)
+ elseif page=="multiplayer" then local d=lobbyData(); d.vehicles=MocazRally.Vehicles; d.stages=MocazRally.Stages; d.isHost=lobby and lobby.host==p or false; d.isMember=lobby and lobby.members[p] or false; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d)
  elseif page=="profile" then
   local results={}
   if db then local q=dbQuery(db,"SELECT stage_id,time_ms,mode,created_at FROM race_results WHERE serial=? ORDER BY time_ms ASC LIMIT 10",getPlayerSerial(p)); results=dbPoll(q,-1) or {} end
