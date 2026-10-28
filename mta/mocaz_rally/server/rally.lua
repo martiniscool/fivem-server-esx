@@ -61,7 +61,7 @@ local function lobbyData()
 end
 local function broadcastLobby()
  if not lobby then return end
- for p in pairs(lobby.members) do if isElement(p) then local d=lobbyData(); d.isHost=p==lobby.host; d.isMember=true; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d) end end
+ for p in pairs(lobby.members) do if isElement(p) then local d=lobbyData(); d.isHost=p==lobby.host; d.isMember=true; d.vehicles=MocazRally.Vehicles; d.stages=MocazRally.Stages; triggerClientEvent(p,"mocazRally:lobbyUpdate",resourceRoot,d) end end
 end
 addEvent("mocazRally:createLobby",true)
 addEventHandler("mocazRally:createLobby",resourceRoot,function(stageId,vehicleId)
@@ -137,7 +137,7 @@ end)
 addEvent("mocazRally:selectVehicle",true)
 addEventHandler("mocazRally:selectVehicle",resourceRoot,function(id)
  local p=client; local v=vehicleById(id); if not isElement(p) or not v then return end
- setElementData(p,"mocazRally:vehicle",id,false); notice(p,"Vybrané auto: "..v.label); menu(p,"garage",{vehicles=MocazRally.Vehicles,selected=id})
+ setElementData(p,"mocazRally:vehicle",id,false); if lobby and lobby.members[p] then lobby.vehicles[p]=id; broadcastLobby(); notice(p,"Auto v lobby: "..v.label) else notice(p,"Vybrané auto: "..v.label); menu(p,"garage",{vehicles=MocazRally.Vehicles,selected=id}) end
 end)
 addEvent("mocazRally:schoolLesson",true)
 addEventHandler("mocazRally:schoolLesson",resourceRoot,function(lesson)
