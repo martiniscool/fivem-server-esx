@@ -1,5 +1,6 @@
 local db = dbConnect("sqlite", "mocaz_rally.db")
 local profiles = {}
+local lastProfileRequest = {}
 
 local function log(message, level)
     outputDebugString("[Mocaz Rally] " .. tostring(message), level or 3)
@@ -55,6 +56,11 @@ addEvent("mocazRally:requestProfile", true)
 addEventHandler("mocazRally:requestProfile", resourceRoot, function()
     local player = client
     if not isElement(player) then return end
+    local now = getTickCount()
+    if lastProfileRequest[player] and now - lastProfileRequest[player] < 3000 then
+        return
+    end
+    lastProfileRequest[player] = now
     if not db then
         triggerClientEvent(player, "mocazRally:notice", resourceRoot, "Databáze profilu není dostupná. Kontaktuj správce serveru.")
         log("requestProfile: databáze není dostupná.", 1)
@@ -138,7 +144,7 @@ addEventHandler("mocazRally:menuAction", resourceRoot, function(action)
     triggerClientEvent(player, "mocazRally:menuOpened", resourceRoot, action)
 end)
 
-addEventHandler("onPlayerQuit", root, function() profiles[source] = nil end)
+addEventHandler("onPlayerQuit", root, function() profiles[source] = nil; lastProfileRequest[source] = nil end)
 addEventHandler("onResourceStart", resourceRoot, function()
     log("Resource spuštěn. Verze " .. MocazRally.Version)
 end)
