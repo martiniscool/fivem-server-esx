@@ -1,7 +1,7 @@
 (() => {
  const screens=["create","driver","main","game"]; let profile=null,activePage="main",lastGameData={};
  const $=id=>document.getElementById(id);
- function show(id){screens.forEach(s=>$(s).classList.toggle("hidden",s!==id));}
+ function show(id){screens.forEach(s=>$(s).classList.toggle("hidden",s!==id));const n=$("notice");if(n&&id!=="create")n.classList.add("hidden");}
  function emit(name,...args){if(window.mta&&typeof window.mta.triggerEvent==="function")window.mta.triggerEvent(name,...args);else console.log("MTA bridge missing",name,args);}
  function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
  function card(title,tag,desc,button,action,value){return '<article class="choice-card"><span class="tag">'+esc(tag)+'</span><b>'+esc(title)+'</b><small>'+esc(desc||"")+'</small><button data-action="'+esc(action)+'" data-value="'+esc(value||"")+'">'+esc(button)+'</button></article>';}
@@ -10,9 +10,9 @@
  function stages(data,action){return (data.stages||[]).map(s=>card(s.name,s.difficulty+" · "+s.location,s.description,action==="solo"?"VYBRAT ETAPU":"VYBRAT ETAPU",action,s.id)).join("");}
  window.MocazRallyUI={
   setVersion(v){$("version").textContent="BUILD "+v;},
-  showCreateProfile(){show("create");},
-  showDriverSelection(data){if(data)profile=Object.assign(profile||{},data);show("driver");},
-  showMain(data){document.body.classList.remove("racing");if(data)profile=Object.assign(profile||{},data);if(!profile||!profile.nickname){show("create");return;}$("welcomeName").textContent=profile.nickname+"."; $("profileName").textContent=profile.nickname;$("profileMeta").textContent="ROK "+(profile.birthYear||"—")+" · "+String(profile.driverStyle||"rookie").toUpperCase();show("main");$("raceOverlay").classList.add("hidden");},
+  showCreateProfile(){show("create");const n=$("nickname");if(n&&n.value)n.focus();},
+  showDriverSelection(data){if(data&&data.nickname)profile=Object.assign(profile||{},data);if(!profile||!profile.nickname){show("create");this.showNotice("Profil se nevrátil ze serveru. Vyplň registraci znovu; serverová konzole vypíše důvod.");return;}show("driver");},
+  showMain(data){document.body.classList.remove("racing");if(data&&data.nickname)profile=Object.assign(profile||{},data);if(!profile||!profile.nickname){show("create");this.showNotice("Chybí data profilu. Server neodeslal přezdívku; restartuj resource a zkontroluj konzoli.");return;}$("welcomeName").textContent=profile.nickname+"."; $("profileName").textContent=profile.nickname;$("profileMeta").textContent="ROK "+(profile.birthYear||"—")+" · "+String(profile.driverStyle||"rookie").toUpperCase();show("main");$("raceOverlay").classList.add("hidden");},
   showNotice(message){const n=$("notice");n.textContent=String(message||"Něco se nepovedlo.");n.classList.remove("hidden");clearTimeout(window.noticeTimer);window.noticeTimer=setTimeout(()=>n.classList.add("hidden"),5000);},
   showSection(action){emit("mocazRally:uiMenuAction",action);},
   showGameData(page,data){lastGameData=data||{};if(page==="solo"){setGame("Vyber si etapu.","Zvol trasu a auto pro časovku.","solo",stages(data,"solo")+'<div class="lobby-box"><label for="soloVehicle">ZÁVODNÍ AUTO</label><select id="soloVehicle">'+(data.vehicles||[]).map(v=>'<option value="'+esc(v.id)+'">'+esc(v.label+' · '+v.drive+' · '+v.power+' PS')+'</option>').join("")+'</select></div>');}
@@ -30,7 +30,7 @@
   hideRaceHUD(){ document.body.classList.remove("racing");$("raceOverlay").style.pointerEvents="none";$("raceOverlay").classList.add("hidden");show("main");}
  };
  $("profileForm").addEventListener("submit",e=>{e.preventDefault();emit("mocazRally:uiCreateProfile",$("nickname").value.trim(),Number($("birthYear").value));});
- document.querySelectorAll("[data-driver]").forEach(b=>b.addEventListener("click",()=>emit("mocazRally:uiChooseDriver",b.dataset.driver)));
+ document.querySelectorAll("[data-driver]").forEach(b=>b.addEventListener("click",()=>{b.disabled=true;b.classList.add("selected");emit("mocazRally:uiChooseDriver",b.dataset.driver);setTimeout(()=>{if(document.getElementById("driver")&&!document.getElementById("driver").classList.contains("hidden")){b.disabled=false;b.classList.remove("selected");window.MocazRallyUI.showNotice("Server neodpověděl na výběr stylu. Zkontroluj, zda se aktualizoval server/main.lua.");}},5000);}));
  document.querySelectorAll("[data-action]").forEach(b=>b.addEventListener("click",()=>emit("mocazRally:uiMenuAction",b.dataset.action)));
  $("gameContent").addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;const action=b.dataset.action,val=b.dataset.value;
   if(action==="solo"){const select=$("soloVehicle");emit("mocazRally:uiStartSolo",val,select?select.value:"sultan");}
