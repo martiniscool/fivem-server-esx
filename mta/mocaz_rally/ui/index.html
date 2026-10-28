@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mocaz Rally</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="grain"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">M</span><span>MOCAZ<span class="red"> RALLY</span><small>RALLY DRIVER PROGRAM</small></span></div>
+      <div class="version" id="version">BUILD 0.1.0</div>
+    </header>
+    <section id="notice" class="notice hidden"></section>
+    <section id="create" class="screen">
+      <div class="eyebrow">01 / REGISTRACE ZÁVODNÍKA</div>
+      <h1>Vytvoř si<br><span class="red">svůj profil.</span></h1>
+      <p class="lead">Tvoje jméno. Tvoje kariéra. Tvoje časy.</p>
+      <form id="profileForm">
+        <label for="nickname">ZÁVODNÍ PŘEZDÍVKA</label>
+        <input id="nickname" maxlength="24" minlength="3" placeholder="např. MOCazRacer" required>
+        <label for="birthYear">ROK NAROZENÍ</label>
+        <input id="birthYear" type="number" min="1900" max="2026" placeholder="2007" required>
+        <button class="primary" type="submit">VYTVOŘIT PROFIL <span>↗</span></button>
+      </form>
+      <div class="footnote">Profil se ukládá na serveru. Heslo zde není potřeba.</div>
+    </section>
+    <section id="main" class="screen hidden">
+      <div class="welcome"><div><div class="eyebrow">ZÁVODNÍ CENTRÁLA</div><h1>Vítej,<br><span class="red" id="welcomeName">závodníku.</span></h1><p class="lead">Vyber, kam vyrazíš jako první.</p></div><div class="profile-chip"><div class="avatar">MR</div><div><b id="profileName">Závodník</b><small id="profileMeta">DRIVER PROFILE</small></div></div></div>
+      <div class="menu-grid">
+        <button class="menu-card featured" data-action="solo"><span class="card-index">01 / TIME ATTACK</span><b>SOLO</b><small>Trénink · časovky · rekordy</small><span class="arrow">↗</span></button>
+        <button class="menu-card" data-action="multiplayer"><span class="card-index">02 / ONLINE</span><b>MULTIPLAYER</b><small>Lobby · společné závody</small><span class="arrow">↗</span></button>
+        <button class="menu-card" data-action="school"><span class="card-index">03 / TRAINING</span><b>RALLY ŠKOLA</b><small>Technika · brzdění · zatáčky</small><span class="arrow">↗</span></button>
+        <button class="menu-card" data-action="garage"><span class="card-index">04 / VEHICLES</span><b>GARÁŽ</b><small>Auta · nastavení · tuning</small><span class="arrow">↗</span></button>
+      </div>
+      <footer class="main-footer"><button class="text-button" data-action="profile">MŮJ PROFIL ↗</button><span>DISCIPLÍNA. PŘESNOST. RYCHLOST.</span></footer>
+    </section>
+    <section id="section" class="screen hidden">
+      <div class="eyebrow" id="sectionTag">MOCAZ RALLY</div>
+      <h1 id="sectionTitle">Připravujeme.</h1>
+      <p class="lead" id="sectionText">Tahle část projektu se právě staví.</p>
+      <div class="coming"><span class="pulse"></span><div><b>DALŠÍ VE VÝVOJI</b><small>Rozhraní je připravené, herní systém bude následovat.</small></div></div>
+      <button class="primary back" id="backButton">ZPĚT DO MENU <span>↗</span></button>
+    </section>
+    <div class="bottomline"><span>MOCAZ RALLY ©</span><span>MADE FOR COMPETITION</span></div>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
