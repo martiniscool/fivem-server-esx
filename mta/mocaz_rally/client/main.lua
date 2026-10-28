@@ -1,6 +1,7 @@
 local screenW, screenH = guiGetScreenSize()
 local browserGUI, browser
 local profileReady = false
+local currentProfile = nil
 
 local function hideWorld()
     fadeCamera(true, 0.5)
@@ -26,6 +27,11 @@ local function callUI(functionName, ...)
     executeBrowserJavascript(browser, "window.MocazRallyUI && window.MocazRallyUI." .. functionName .. "(" .. table.concat(encoded, ",") .. ");")
 end
 MocazRallyCallUI = callUI
+
+addEvent("mocazRally:uiRequestProfile", true)
+addEventHandler("mocazRally:uiRequestProfile", root, function()
+    triggerServerEvent("mocazRally:requestProfile", resourceRoot)
+end)
 
 addEvent("mocazRally:uiCreateProfile", true)
 addEventHandler("mocazRally:uiCreateProfile", root, function(nickname, birthYear)
@@ -64,6 +70,7 @@ addEventHandler("mocazRally:uiSchoolLesson", root, function(id) triggerServerEve
 
 addEvent("mocazRally:profileLoaded", true)
 addEventHandler("mocazRally:profileLoaded", resourceRoot, function(profile)
+    if profile and profile.nickname then currentProfile = profile end
     outputDebugString("[Mocaz Rally] Klient přijal profileLoaded: " .. tostring(profile and profile.nickname) .. ", isNew=" .. tostring(profile and profile.isNew))
     profileReady = true
     if profile and profile.isNew then callUI("showDriverSelection", profile) else callUI("showMain", profile) end
@@ -74,6 +81,7 @@ addEvent("mocazRally:notice", true)
 addEventHandler("mocazRally:notice", resourceRoot, function(message) callUI("showNotice", message) end)
 addEvent("mocazRally:driverChosen", true)
 addEventHandler("mocazRally:driverChosen", resourceRoot, function(profile)
+    if profile and profile.nickname then currentProfile = profile end
     outputDebugString("[Mocaz Rally] Klient přijal driverChosen: " .. tostring(profile and profile.nickname))
     profileReady = true
     callUI("showMain", profile)
@@ -87,7 +95,7 @@ addEventHandler("mocazRally:lobbyUpdate", resourceRoot, function(data) callUI("s
 addEvent("mocazRally:racePrepared", true)
 addEventHandler("mocazRally:racePrepared", resourceRoot, function() setCameraTarget(localPlayer); showCursor(false); showChat(true); showPlayerHudComponent("all", true); callUI("showRaceMode") end)
 addEvent("mocazRally:raceReturn", true)
-addEventHandler("mocazRally:raceReturn", resourceRoot, function() setCameraMatrix(MocazRally.MenuCamera.x, MocazRally.MenuCamera.y, MocazRally.MenuCamera.z, MocazRally.MenuCamera.lx, MocazRally.MenuCamera.ly, MocazRally.MenuCamera.lz); showCursor(true); callUI("showMain") end)
+addEventHandler("mocazRally:raceReturn", resourceRoot, function() setCameraMatrix(MocazRally.MenuCamera.x, MocazRally.MenuCamera.y, MocazRally.MenuCamera.z, MocazRally.MenuCamera.lx, MocazRally.MenuCamera.ly, MocazRally.MenuCamera.lz); showCursor(true); if currentProfile then callUI("showMain", currentProfile) else callUI("showMain"); triggerServerEvent("mocazRally:requestProfile", resourceRoot) end end)
 
 addEventHandler("onClientResourceStart", resourceRoot, function()
     hideWorld()
