@@ -32,7 +32,7 @@ end)
 addEvent("mocazRally:checkpointAccepted",true)
 addEventHandler("mocazRally:checkpointAccepted",resourceRoot,function(index,total)
  if not race then return end
- race.next=index+1
+ race.next=index+1; race.pending=false
  if race.next<=total then setCheckpoint(race.payload.checkpoints[race.next],false); ui("showRaceHUD","CHECKPOINT "..index.."/"..total)
  else setCheckpoint(race.payload.finish,true); ui("showRaceHUD","DO CÍLE!") end
 end)
@@ -49,6 +49,18 @@ addEvent("mocazRally:raceReturn",true)
 addEventHandler("mocazRally:raceReturn",resourceRoot,function()
  clearMarkers(); race=nil; ui("hideRaceHUD",nil); setElementAlpha(localPlayer,0); setElementFrozen(localPlayer,true); showCursor(true)
 end)
+
+addEventHandler("onClientMarkerHit", root, function(hitElement, matchingDimension)
+ if source ~= marker or hitElement ~= localPlayer or not matchingDimension or not race or not race.running or race.pending then return end
+ if getPedOccupiedVehicle(localPlayer) == false then return end
+ race.pending = true
+ if race.next <= #race.payload.checkpoints then
+  triggerServerEvent("mocazRally:checkpoint", resourceRoot, race.next)
+ else
+  triggerServerEvent("mocazRally:finish", resourceRoot)
+ end
+end)
+
 addEventHandler("onClientRender",root,function()
  if not race or not race.running then return end
  local elapsed=(getTickCount()-race.started)/1000
