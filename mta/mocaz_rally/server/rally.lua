@@ -134,6 +134,12 @@ addEventHandler("mocazRally:requestGameData",resourceRoot,function(page)
   menu(p,"profile",{results=results})
  end
 end)
+addEvent("mocazRally:setPreferredVehicle",true)
+addEventHandler("mocazRally:setPreferredVehicle",resourceRoot,function(id)
+ local p=client; local v=vehicleById(id); if not isElement(p) or not v then return end
+ setElementData(p,"mocazRally:vehicle",id,false)
+ if lobby and lobby.members[p] then lobby.vehicles[p]=id; broadcastLobby() end
+end)
 addEvent("mocazRally:selectVehicle",true)
 addEventHandler("mocazRally:selectVehicle",resourceRoot,function(id)
  local p=client; local v=vehicleById(id); if not isElement(p) or not v then return end
