@@ -70,7 +70,7 @@ addEventHandler("mocazRally:chooseDriver", resourceRoot, function(style)
     if not valid then return end
     dbExec(db, "UPDATE profiles SET driver_style = ? WHERE serial = ?", style, getPlayerSerial(player))
     profiles[player].driverStyle = style
-    triggerClientEvent(player, "mocazRally:driverChosen", resourceRoot, style)
+    triggerClientEvent(player, "mocazRally:driverChosen", resourceRoot, { nickname = profiles[player].nickname, birthYear = profiles[player].birthYear, driverStyle = style, isNew = false })
 end)
 
 addEvent("mocazRally:menuAction", true)
