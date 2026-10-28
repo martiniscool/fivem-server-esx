@@ -55,7 +55,7 @@ addEventHandler("mocazRally:createProfile", resourceRoot, function(nickname, bir
     end
     local serial = getPlayerSerial(player)
     dbExec(db, "INSERT OR REPLACE INTO profiles (serial, nickname, birth_year, driver_style) VALUES (?, ?, ?, COALESCE((SELECT driver_style FROM profiles WHERE serial = ?), 'rookie'))", serial, nickname, birthYear, serial)
-    sendProfile(player, { nickname = nickname, birthYear = birthYear, driverStyle = "rookie", isNew = false })
+    sendProfile(player, { nickname = nickname, birthYear = birthYear, driverStyle = "rookie", isNew = true })
 end)
 
 addEvent("mocazRally:chooseDriver", true)
